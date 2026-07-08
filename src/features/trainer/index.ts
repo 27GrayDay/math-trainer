@@ -1,0 +1,1 @@
+export { useTrainer } from "./model/useTrainer";
