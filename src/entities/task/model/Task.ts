@@ -1,5 +1,6 @@
 export interface Task {
-    left: number
-    right: number
-    answer: number
+    left: number;
+    right: number;
+    answer: number;
+    operation: string;
 }

@@ -6,8 +6,11 @@ interface TaskViewProps {
 }
 
 export function TaskView({ task, answer }: TaskViewProps) {
+    const maxDigits = task.answer.toString().length
+    const displayAnswer = answer.padEnd(maxDigits, " ")
+
     return (
-        <div className="text-6xl font-bold">
+        <div className="text-5xl font-bold">
             <span className="text-blue-600">
                 {task.left}
             </span>
@@ -24,8 +27,14 @@ export function TaskView({ task, answer }: TaskViewProps) {
                 =
             </span>
 
-            <span>
-                {answer}
+            <span
+                className="
+                    inline-block
+                    w-[3ch]
+                    font-mono
+                "
+            >
+                {displayAnswer}
             </span>
         </div>
     );

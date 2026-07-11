@@ -6,29 +6,43 @@ interface HistoryViewProps {
 
 export function HistoryView({ history }: HistoryViewProps) {
     return (
-        <div className="mt-16 space-y-2">
+        <div className="space-y-2">
             {history.map((item, index) => {
 
-                let color = "text-gray-500";
-
                 if (item.result === "correct") {
-                    color = "text-green-600";
+                    return (
+                        <div
+                            key={index}
+                            className="text-green-600 text-2xl font-medium"
+                        >
+                            {item.task.left} + {item.task.right} = {item.shownAnswer}
+                        </div>
+                    );
                 }
 
-                if (item.result === "wrong") {
-                    color = "text-red-600";
+                if (item.result === "shown") {
+                    return (
+                        <div
+                            key={index}
+                            className="text-gray-500 text-2xl font-medium"
+                        >
+                            {item.task.left} + {item.task.right} = {item.task.answer}
+                        </div>
+                    );
                 }
 
                 return (
                     <div
                         key={index}
-                        className={`${color} text-2xl font-medium`}
+                        className="text-2xl font-medium"
                     >
-                        {item.task.left}
-                        {" + "}
-                        {item.task.right}
-                        {" = "}
-                        {item.shownAnswer}
+                        <span className="text-gray-500">
+                            {item.task.left} + {item.task.right} = {item.task.answer}
+                        </span>
+
+                        <span className="ml-4 text-red-600 line-through">
+                            {item.shownAnswer}
+                        </span>
                     </div>
                 );
             })}

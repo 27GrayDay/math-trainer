@@ -1,15 +1,29 @@
 import { useCallback, useEffect, useState } from "react"
-
-import { generateTask } from "@/entities/task"
+import { audioPlayer } from "@/shared/lib/audio";
+import { generateTask } from "@/entities/task/model/generator";
 import type { HistoryItem, ResultType } from "@/entities/history"
+import { useSettings } from "@/app/providers/SettingsProvider";
 
 export function useTrainer() {
+    const { settings } = useSettings();
 
-    const [task, setTask] = useState(generateTask())
+    const [task, setTask] = useState(
+        () => generateTask(settings)
+    );
     const [answer, setAnswer] = useState("")
     const [history, setHistory] = useState<HistoryItem[]>([])
 
     const finishTask = useCallback((result: ResultType) => {
+
+        switch (result) {
+            case "correct":
+                audioPlayer.playCorrect();
+                break;
+
+            case "wrong":
+                audioPlayer.playWrong();
+                break;
+        }
 
         setHistory(prev => [
             {
@@ -23,10 +37,10 @@ export function useTrainer() {
             ...prev
         ].slice(0, 3))
 
-        setTask(generateTask())
+        setTask(generateTask(settings))
         setAnswer("")
 
-    }, [task, answer])
+    }, [task, answer, settings])
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
 

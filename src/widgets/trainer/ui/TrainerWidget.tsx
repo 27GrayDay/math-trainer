@@ -6,7 +6,7 @@ export function TrainerWidget() {
     const { state } = useTrainer();
 
     return (
-        <main className="min-h-screen flex items-center justify-center">
+        <main className="min-h-screen flex flex-col items-center justify-center gap-4">
             <TaskView
                 task={state.task}
                 answer={state.answer}

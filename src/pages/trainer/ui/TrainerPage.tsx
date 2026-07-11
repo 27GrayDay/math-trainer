@@ -1,5 +1,23 @@
 import { TrainerWidget } from "@/widgets/trainer";
 
-export function TrainerPage() {
-    return <TrainerWidget />;
+interface TrainerPageProps {
+    onSettings: () => void;
+}
+
+export function TrainerPage({
+    onSettings,
+}: TrainerPageProps) {
+
+    return (
+        <>
+            <button
+                onClick={onSettings}
+                className="absolute top-6 right-6"
+            >
+                ⚙️
+            </button>
+
+            <TrainerWidget />
+        </>
+    );
 }
