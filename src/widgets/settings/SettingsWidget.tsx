@@ -1,20 +1,24 @@
 import { OperationSelector } from "@/features/settings/ui/OperationSelector";
+import { ToolbarCard } from "./ui/ToolbarCard";
 import { AdditionSettings } from "@/features/settings/ui/AdditionSettings";
+import { TrainingSettings } from "@/features/settings/ui/TrainingSettings";
 
 export function SettingsWidget() {
     return (
-        <main className="min-h-screen flex justify-center py-10">
-            <div className="w-full max-w-3xl space-y-8">
+        <div className="mx-auto max-w-3xl space-y-6 p-6">
 
-                <h1 className="text-4xl font-bold">
-                    Настройки
-                </h1>
+            <ToolbarCard />
 
-                <OperationSelector />
+            <OperationSelector />
 
-                <AdditionSettings />
+            <AdditionSettings />
 
-            </div>
-        </main>
+            <TrainingSettings />
+
+            {/* <OperationSettings />
+
+            <StartTrainingCard /> */}
+
+        </div>
     );
 }

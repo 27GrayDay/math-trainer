@@ -5,30 +5,34 @@ import {
     type Operation as OperationType,
 } from "@/entities/settings";
 
+import { Card } from "@/shared/ui/Card/Card";
+import { CircleButton } from "@/shared/ui/CircleButton/CircleButton";
+
+
 const operations = [
     {
         value: Operation.Addition,
-        label: "Сложение",
+        label: "+",
     },
     {
         value: Operation.Subtraction,
-        label: "Вычитание",
+        label: "-",
     },
     {
         value: Operation.Multiplication,
-        label: "Умножение",
+        label: "×",
     },
     {
         value: Operation.Division,
-        label: "Деление",
+        label: "÷",
     },
     {
         value: Operation.Power,
-        label: "Возведение в степень",
+        label: "x²",
     },
     {
         value: Operation.Root,
-        label: "Извлечение корня",
+        label: "√",
     },
 ];
 
@@ -65,37 +69,32 @@ export function OperationSelector() {
     }
 
     return (
-        <div className="space-y-3">
+        <Card>
 
-            <h2 className="text-2xl font-semibold">
-                Операции
+            <h2 className="mb-4 text-xl font-semibold">
+                Настройка тренировки
             </h2>
 
-            {operations.map(operation => (
+            <div className="flex gap-3">
 
-                <label
-                    key={operation.value}
-                    className="flex items-center gap-3 cursor-pointer"
-                >
+                {operations.map(operation => (
 
-                    <input
-                        type="checkbox"
-                        checked={settings.operations.includes(
-                            operation.value
-                        )}
-                        onChange={() =>
-                            toggle(operation.value)
-                        }
-                    />
+                    <CircleButton
 
-                    <span>
+                        key={operation.value}
+
+                        selected={settings.operations.includes(operation.value)}
+
+                        onClick={() => toggle(operation.value)}
+
+                    >
                         {operation.label}
-                    </span>
+                    </CircleButton>
 
-                </label>
+                ))}
 
-            ))}
+            </div>
 
-        </div>
+        </Card>
     );
 }

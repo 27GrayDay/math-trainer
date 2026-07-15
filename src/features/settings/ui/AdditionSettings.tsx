@@ -1,5 +1,7 @@
 import { useSettings } from "@/app/providers/SettingsProvider";
 import { Operation } from "@/entities/settings";
+import { Card } from "@/shared/ui/Card/Card";
+import { SegmentedControl } from "@/shared/ui/SegmentedControl/SegmentedControl";
 
 export function AdditionSettings() {
 
@@ -12,97 +14,46 @@ export function AdditionSettings() {
         return null;
     }
 
-    const values = [10, 20, 50, 100, 1000] as const;
-
     return (
 
-    <div className="space-y-4">
+    <Card>
 
-        <h2 className="text-2xl font-semibold">
+        <h2 className="mb-5 text-xl font-semibold">
             Сложение
         </h2>
 
-        <div>
+        <div className="flex flex-wrap gap-3">
+            <SegmentedControl
 
-            <p className="font-medium mb-2">
-                Максимальное число
-            </p>
+                value={settings.addition.maxNumber}
 
-            <div className="space-y-2">
+                options={[
+                    { value: 10, label: "До 10" },
+                    { value: 20, label: "До 20" },
+                    { value: 50, label: "До 50" },
+                    { value: 100, label: "До 100" },
+                    { value: 1000, label: "До 1000" },
+                ]}
 
-                {values.map(value => (
-
-                    <label
-                        key={value}
-                        className="flex items-center gap-2"
-                    >
-
-                        <input
-                            type="radio"
-                            checked={
-                                settings.addition.maxNumber === value
-                            }
-                            onChange={() => {
-
-                                setSettings(prev => ({
-
-                                    ...prev,
-
-                                    addition: {
-
-                                        ...prev.addition,
-
-                                        maxNumber: value
-
-                                    }
-
-                                }))
-
-                            }}
-                        />
-
-                        До {value}
-
-                    </label>
-
-                ))}
-
-            </div>
-
-        </div>
-
-        <label
-            className="flex items-center gap-2"
-        >
-
-            <input
-                type="checkbox"
-                checked={settings.addition.allowNegative}
-                onChange={(event) => {
+                onChange={(value) =>
 
                     setSettings(prev => ({
-
                         ...prev,
 
                         addition: {
-
                             ...prev.addition,
-
-                            allowNegative:
-                                event.target.checked
-
-                        }
+                            maxNumber: value,
+                        },
 
                     }))
 
-                }}
+                }
+
             />
 
-            Использовать отрицательные числа
+        </div>
 
-        </label>
-
-    </div>
+    </Card>
 
 )
 }

@@ -1,27 +1,46 @@
-import { useCallback, useEffect, useState } from "react"
-import { audioPlayer } from "@/shared/lib/audio";
-import { generateTask } from "@/entities/task/model/generator";
-import type { HistoryItem, ResultType } from "@/entities/history"
+import { useCallback, useEffect, useMemo, useState } from "react";
+
 import { useSettings } from "@/app/providers/SettingsProvider";
+import { createAdditionDeck } from "@/entities/deck/model/createAdditionDeck";
+
+import type { HistoryItem, ResultType } from "@/entities/history";
+
+import { audioPlayer } from "@/shared/lib/audio";
 
 export function useTrainer() {
+
     const { settings } = useSettings();
 
-    const [task, setTask] = useState(
-        () => generateTask(settings)
+    const deck = useMemo(
+        () => createAdditionDeck(settings.addition),
+        [settings.addition]
     );
-    const [answer, setAnswer] = useState("")
-    const [history, setHistory] = useState<HistoryItem[]>([])
+
+    const [task, setTask] = useState(() => deck.next());
+    const [answer, setAnswer] = useState("");
+    const [history, setHistory] = useState<HistoryItem[]>([]);
+
+    useEffect(() => {
+        setTask(deck.next());
+        setAnswer("");
+        setHistory([]);
+    }, [deck]);
 
     const finishTask = useCallback((result: ResultType) => {
 
         switch (result) {
             case "correct":
                 audioPlayer.playCorrect();
+                deck.answer(task, true);
                 break;
 
             case "wrong":
                 audioPlayer.playWrong();
+                deck.answer(task, false);
+                break;
+
+            case "shown":
+                deck.answer(task, false);
                 break;
         }
 
@@ -32,64 +51,66 @@ export function useTrainer() {
                     result === "shown"
                         ? task.answer
                         : Number(answer),
-                result
+                result,
             },
-            ...prev
-        ].slice(0, 3))
+            ...prev,
+        ].slice(0, 3));
 
-        setTask(generateTask(settings))
-        setAnswer("")
+        setTask(deck.next());
+        setAnswer("");
 
-    }, [task, answer, settings])
+    }, [task, answer, deck]);
 
     const handleKeyDown = useCallback((event: KeyboardEvent) => {
 
-        if (event.repeat) return
+        if (event.repeat) return;
 
         if (event.key >= "0" && event.key <= "9") {
-            setAnswer(prev => prev + event.key)
+            setAnswer(prev => prev + event.key);
+            return;
         }
 
         if (event.key === "Backspace") {
-            setAnswer(prev => prev.slice(0, -1))
+            setAnswer(prev => prev.slice(0, -1));
+            return;
         }
 
         if (event.code === "Space") {
-            event.preventDefault()
-            finishTask("shown")
+            event.preventDefault();
+            finishTask("shown");
         }
 
-    }, [finishTask])
+    }, [finishTask]);
 
     useEffect(() => {
 
-        window.addEventListener("keydown", handleKeyDown)
+        window.addEventListener("keydown", handleKeyDown);
 
         return () => {
-            window.removeEventListener("keydown", handleKeyDown)
-        }
+            window.removeEventListener("keydown", handleKeyDown);
+        };
 
-    }, [handleKeyDown])
+    }, [handleKeyDown]);
 
     useEffect(() => {
 
-        if (answer.length !== task.answer.toString().length)
-            return
+        if (answer.length !== task.answer.toString().length) {
+            return;
+        }
 
         finishTask(
             Number(answer) === task.answer
                 ? "correct"
                 : "wrong"
-        )
+        );
 
-    }, [answer, task, finishTask])
+    }, [answer, task, finishTask]);
 
     return {
         state: {
             task,
             answer,
-            history
-        }
-    }
-
+            history,
+        },
+    };
 }

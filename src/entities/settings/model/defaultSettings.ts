@@ -32,4 +32,12 @@ export const defaultTrainerSettings: TrainerSettings = {
     root: {
         maxValue: 100,
     },
+
+    training: {
+
+        duration: 10,
+
+        timePerQuestion: -1,
+
+    },
 };

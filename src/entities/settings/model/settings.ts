@@ -34,4 +34,12 @@ export interface TrainerSettings {
     power: PowerSettings;
 
     root: RootSettings;
+
+    training: {
+
+        duration: 5 | 10 | 15 | 20 | 30 | -1;
+
+        timePerQuestion: 3 | 5 | 10 | 15 | 30 | -1;
+
+    };
 }
